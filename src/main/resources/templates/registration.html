@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenido a Order</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f6f6f6; padding: 20px;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <table width="600" style="background-color: #ffffff; border-radius: 8px; padding: 40px;">
+          <tr>
+            <td align="center">
+              <h2 style="color: #333333;">¡Bienvenido a <span style="color:#007BFF;">Order</span>!</h2>
+              <p style="color: #555555; font-size: 16px;">Hola <strong th:text="${name}"></strong>,</p>
+              <p style="color: #555555; font-size: 16px;">
+                Gracias por registrarte en nuestra plataforma. Tu cuenta se ha creado con éxito y ya puedes iniciar sesión para comenzar a disfrutar de nuestros servicios.
+              </p>
+
+              <p style="color: #555555; font-size: 16px;">
+                📧 <strong>Email registrado:</strong> <span th:text="${email}"></span>
+              </p>
+
+              <!--
+              <a href="[URL_de_inicio_de_sesion]"
+                style="display: inline-block; margin-top: 20px; background-color: #007BFF; color: #ffffff; padding: 12px 24px; border-radius: 5px; text-decoration: none;">
+                Iniciar sesión
+              </a>-->
+
+              <p style="margin-top: 30px; color: #999999; font-size: 12px;">
+                Si tú no realizaste este registro, puedes ignorar este mensaje o contactarnos.
+              </p>
+
+              <p style="color: #555555; font-size: 16px;">
+                ¡Nos alegra tenerte con nosotros!<br><br>
+                El equipo de <strong>Order</strong>
+              </p>
+            </td>
+          </tr>
+        </table>
+        <p style="margin-top: 20px; color: #aaaaaa; font-size: 12px;">
+          © 2025 Order. Todos los derechos reservados.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

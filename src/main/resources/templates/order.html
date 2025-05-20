@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Pedido</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; padding: 20px;">
+    <table style="max-width: 600px; margin: 0 auto; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <thead>
+            <tr style="background-color: #007BFF; color: #fff; padding: 10px;">
+                <th colspan="2" style="text-align: center; padding: 20px;">
+                    <h2>Confirmación de Pedido</h2>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2" style="padding: 20px;">
+                    <p style="font-size: 16px;">Hola <strong th:text="${name}"></strong>,</p>
+                    <p style="font-size: 16px;">Gracias por tu compra. Tu pedido ha sido recibido y está siendo procesado.</p>
+                    <p style="font-size: 16px;">A continuación, los detalles de tu pedido:</p>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">
+                        <thead>
+                            <tr style="background-color: #f8f8f8; color: #333;">
+                                <th style="padding: 10px; text-align: left;">Producto</th>
+                                <th style="padding: 10px; text-align: right;">Cantidad</th>
+                                <th style="padding: 10px; text-align: right;">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Este contenido se debe generar dinámicamente -->
+                            <tr th:each="product : ${products}">
+                                <td style="padding: 10px; text-align: left;" th:text="${product.productName}"></td>
+                                <td style="padding: 10px; text-align: right;" th:text="${product.quantity}"></td>
+                                <td style="padding: 10px; text-align: right;" th:text="${product.price}"></td>
+                            </tr>
+                            <!-- Puedes añadir más filas para otros productos -->
+                        </tbody>
+                    </table>
+                    <p style="font-size: 16px; margin-top: 20px;">Total: <strong th:text="${totalAmount}"></strong></p>
+                    <p style="font-size: 16px;">Tu pedido será enviado a la dirección que proporcionaste en el momento de la compra.</p>
+                </td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td colspan="2" style="text-align: center; padding: 10px;">
+                    <p style="font-size: 14px; color: #888;">Si tienes alguna pregunta, no dudes en ponerte en contacto con nosotros.</p>
+                    <p style="font-size: 14px; color: #888;">¡Gracias por comprar con nosotros!</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
