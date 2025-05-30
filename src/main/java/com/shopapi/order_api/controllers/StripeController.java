@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopapi.order_api.dtos.stripe.PaymentResponse;
@@ -42,22 +41,10 @@ public class StripeController {
         this.stripeService = stripeService;
     }
 
-    // Crear un PaymentIntent
-    @PostMapping("/create")
-    public ResponseEntity<?> createPaymentIntent(@RequestParam Long amount, @RequestParam String currency) {
-        try {
-            PaymentIntent paymentIntent = stripeService.createPaymentIntent(amount, currency);     
-            PaymentResponse response = new PaymentResponse(paymentIntent.getClientSecret(), paymentIntent.getId());
-            return ResponseEntity.ok(response);
-        } catch (StripeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     // Confirmar un PaymentIntent
- @PostMapping("/webhook")
+    @PostMapping("/webhook")
     public ResponseEntity<String> handleStripeWebhook(@RequestBody String payload,
-                                                      @RequestHeader("Stripe-Signature") String sigHeader) throws RestException {
+            @RequestHeader("Stripe-Signature") String sigHeader) throws RestException {
         Event event;
 
         try {
@@ -68,11 +55,10 @@ public class StripeController {
 
         if ("payment_intent.succeeded".equals(event.getType())) {
             PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer()
-                .getObject()
-                .orElse(null);
+                    .getObject()
+                    .orElse(null);
 
             if (paymentIntent != null) {
-                // Este ID es el que guardaste en la orden
                 String paymentIntentId = paymentIntent.getId();
                 orderService.markOrderAsPaid(paymentIntentId);
             }

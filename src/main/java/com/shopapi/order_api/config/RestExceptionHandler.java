@@ -75,7 +75,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
         return new ResponseEntity<>(e.getErrorDto(), HttpStatus.FORBIDDEN);
     }
     
-    //@Override TODO
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             org.springframework.web.bind.MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
             WebRequest request) {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopapi.order_api.dtos.products.ProductRequestDTO;
 import com.shopapi.order_api.dtos.products.ProductRequestUpdateDTO;
@@ -22,6 +23,7 @@ import com.shopapi.order_api.util.ProductMapper;
 
 
 @Service
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements IProductService {
 
     @Autowired
@@ -46,6 +48,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponseDTO postProduct(ProductRequestDTO productRequestDTO) throws RestException {
         try {
             return productMapper
@@ -62,6 +65,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponseDTO update(ProductRequestUpdateDTO productRequestUpdateDTO, Long id)
             throws RestException {
         Product product = productRepository.findById(id)
@@ -106,6 +110,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional
     public void deletById(Long id) throws RestException {
         productRepository.deleteById(id);
     }

@@ -4,7 +4,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 
 public interface IStripeService {
-    PaymentIntent createPaymentIntent(Long amount, String currency) throws StripeException;
+    PaymentIntent createPaymentIntent(Long amount, String currency, Long productId, Long userId) throws StripeException;
 
     PaymentIntent confirmPaymentIntent(String id) throws StripeException;
 

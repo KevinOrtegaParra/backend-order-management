@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shopapi.order_api.dtos.users.UserRequestDTO;
 import com.shopapi.order_api.dtos.users.UserRequestUpdateDTO;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceImpl implements IUserService {
 
     @Autowired
@@ -62,6 +64,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO register(UserRequestDTO userRequestDTO) throws RestException {
         UserEntity user = userRepository.findByEmail(userRequestDTO.getEmail());
 
@@ -106,6 +109,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDTO update(UserRequestUpdateDTO user, Authentication authentication) throws RestException {
 
         UserEntity userDB = userRepository.findByEmail(authentication.getName());
@@ -152,6 +156,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public void deletById(Long id) throws RestException {
         log.info("deleteUserById UserService");
         userRepository.deleteById(id);

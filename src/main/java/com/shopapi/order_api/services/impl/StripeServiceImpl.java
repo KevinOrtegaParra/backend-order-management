@@ -17,18 +17,21 @@ public class StripeServiceImpl implements IStripeService {
         Stripe.apiKey = secretKey;
     }
 
-    public PaymentIntent createPaymentIntent(Long amount, String currency) throws StripeException {
+    @Override
+    public PaymentIntent createPaymentIntent(Long amount, String currency, Long orderId, Long userId) throws StripeException {
         try {
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                     .setAmount(amount) // El monto debe estar en centavos. Ejemplo: $10.00 = 1000
                     .setCurrency(currency)
                     .addPaymentMethodType("card")
+                    .putMetadata("orderId", String.valueOf(orderId))
+                    .putMetadata("userId", String.valueOf(userId))
                     .build();
 
             return PaymentIntent.create(params);
-        }catch (CardException e) {
+        } catch (CardException e) {
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }

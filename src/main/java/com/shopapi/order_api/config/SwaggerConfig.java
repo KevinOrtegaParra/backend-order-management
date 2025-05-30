@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
         scheme = "bearer"
 )@OpenAPIDefinition(
     servers = {
-        @Server(url = "https://77f4-204-199-122-249.ngrok-free.app/api/v1")
+        @Server(url = "")
     }
 )
 @Configuration

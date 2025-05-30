@@ -5,13 +5,18 @@
 package com.shopapi.order_api.auth.jwt;
 
 import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
+
+import java.time.Instant;
 import java.util.Date;
 import java.util.function.Function;
+
+import javax.crypto.SecretKey;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,61 +28,62 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class JwtUtils {
-    
+
     @Value("${jwt.secret.key}")
     private String secretKey;
-    
+
     @Value("${jwt.time.expiration}")
     private String timeExpiration;
-    
-    //Generar token de acceso
-    public String generateAccesToken(String userName){
+
+    // Generar token de acceso
+    public String generateAccesToken(String userName) {
         return Jwts.builder()
-                .setSubject(userName)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
-                .signWith(getSignateKey(),SignatureAlgorithm.HS256)
+                .subject(userName)
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
+                .signWith(getSignateKey())
                 .compact();
-        
+
     }
-    
-    public boolean isTokenValid(String token){
-        try{
+
+    public boolean isTokenValid(String token) {
+        try {
             Jwts.parser()
-                    .setSigningKey(getSignateKey())
+                    .verifyWith(getSignateKey())
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseSignedClaims(token)
+                    .getPayload();
             return true;
-        }catch(Exception e){
+
+        } catch (Exception e) {
             log.error("Invalid token, error: ".concat(e.getMessage()));
             return false;
-        }  
+        }
     }
-    
-    public String getUserNameFromToken(String token){
+
+    public String getUserNameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
-    
-    //obtener un claim
-    public <T> T getClaim(String token, Function<Claims,T> claimsFunction){
+
+    // obtener un claim
+    public <T> T getClaim(String token, Function<Claims, T> claimsFunction) {
         Claims claims = extractAllClaims(token);
         return claimsFunction.apply(claims);
-        
+
     }
-    
-    //obtener claims del token
-    public Claims extractAllClaims(String token){
+
+    // obtener claims del token
+    public Claims extractAllClaims(String token) {
         return Jwts.parser()
-                    .setSigningKey(getSignateKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                .verifyWith(getSignateKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
-    
-    public Key getSignateKey(){
+
+    public SecretKey getSignateKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    
+
 }

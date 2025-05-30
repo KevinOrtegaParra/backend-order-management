@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Transactional(readOnly = true)
 public class OrderServiceImpl implements IOrderService {
 
     @Autowired
@@ -85,8 +86,8 @@ public class OrderServiceImpl implements IOrderService {
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, Authentication authentication)
             throws RestException {
         UserEntity user = userRepository.findByEmail(authentication.getName());
@@ -134,12 +135,13 @@ public class OrderServiceImpl implements IOrderService {
 
             order.setTotal(total);
             order.setDetails(details);
+            order = ordeRepository.save(order);
+            ordeDetailRepository.saveAll(details);
             order.setPaymentIntentId(
                     stripeService.createPaymentIntent(
                             total.multiply(BigDecimal.valueOf(100)).longValueExact(),
-                            "usd").getId());
+                            "usd", order.getId(), user.getId()).getId());
             order = ordeRepository.save(order);
-            ordeDetailRepository.saveAll(details);
 
             return orderMapper.tOrderResponseDTO(order);
 
@@ -155,6 +157,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDTO cancelOrder(Long id, Authentication authentication) throws RestException {
         UserEntity user = userRepository.findByEmail(authentication.getName());
         if (user == null) {
@@ -218,6 +221,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    @Transactional
     public void markOrderAsPaid(String paymentIntentId) throws NotFoundException {
         Order order = ordeRepository.findByPaymentIntentId(paymentIntentId);
 
@@ -240,7 +244,7 @@ public class OrderServiceImpl implements IOrderService {
         order.setStatus(OrderStatus.PAID);
         ordeRepository.save(order);
 
-        //Correo de confirmacion 
+        // Correo de confirmacion
         if (emailService.sendOrderConfirmationEmail(order)) {
             log.info("Correo de confirmación enviado para la orden con ID: {}", order.getId());
         } else {
